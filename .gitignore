@@ -1,0 +1,23 @@
+# Build outputs
+build/
+Debug/
+Release/
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+*.d
+*.su
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# CubeMX / STM32 generated (if copied into tree later)
+*.ioc.bak
