@@ -135,8 +135,8 @@ typedef enum
 #define MPU6050_INT_PIN_CLEAR_ON_STATUS_READ     (0U)
 #define MPU6050_INT_PIN_CLEAR_ON_ANY_READ        (1U)
 
-/* Burst read length: ACCEL_XOUT_H through GYRO_ZOUT_L (14 bytes) */
-#define MPU6050_REG_BURST_DATA_LEN           (14U)
+/* IMU raw frame: ACCEL_XOUT_H through GYRO_ZOUT_L (14 bytes) */
+#define MPU6050_RAW_FRAME_BYTE_LEN           (14U)
 
 /* Accelerometer sensitivity (LSB/g) */
 #define MPU6050_ACCEL_LSB_PER_G_2G           (16384.0f)

@@ -7,8 +7,11 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdatomic.h>
 
-#define MPU6050_DRIVER_API_VERSION                (0x0201U)
+#include "mpu6050_hal.h"
+
+#define MPU6050_DRIVER_API_VERSION                (0x0202U)
 
 typedef enum
 {
@@ -31,6 +34,12 @@ typedef enum
     MPU6050_STATE_SLEEP,
     MPU6050_STATE_ERROR
 } te_Mpu6050_State;
+
+typedef enum
+{
+    MPU6050_READ_MODE_POLLING = 0,
+    MPU6050_READ_MODE_ASYNC_DMA = 1
+} te_Mpu6050_ReadMode;
 
 typedef te_Driver_RetCode (*tpfn_Mpu6050BusRead)(uint8_t u8DeviceAddr,
                                                   uint8_t u8RegisterAddr,
@@ -147,6 +156,11 @@ typedef struct
     ts_Mpu6050_Calibration sCalibration;
     tpfn_Mpu6050InterruptPinControl pfnInterruptPinControl;
     void *vpInterruptCtx;
+    te_Mpu6050_ReadMode eReadMode;
+    float f32AccelScale;
+    float f32GyroScale;
+    ts_Mpu6050_Data sAsyncBuffers[2];
+    atomic_uchar u8ActiveBufferIdx;
 } ts_Mpu6050_Handle;
 
 typedef enum
@@ -189,7 +203,8 @@ typedef enum
     MPU6050_IOCTL_REG_READ = 0x70U,
     MPU6050_IOCTL_REG_WRITE = 0x71U,
     MPU6050_IOCTL_REG_READ_BLOCK = 0x72U,
-    MPU6050_IOCTL_REG_WRITE_BLOCK = 0x73U
+    MPU6050_IOCTL_REG_WRITE_BLOCK = 0x73U,
+    MPU6050_IOCTL_SET_READ_MODE = 0x80U
 } te_Mpu6050_IoctlCmd;
 
 /**
@@ -214,6 +229,15 @@ te_Driver_RetCode Mpu6050_Close(ts_Mpu6050_Handle *psHandle);
  * @return DRIVER_OK on success, otherwise te_Driver_RetCode.
  */
 te_Driver_RetCode Mpu6050_Read(ts_Mpu6050_Handle *psHandle, ts_Mpu6050_Data *psOutData);
+
+/**
+ * @brief Submits a raw sensor frame to asynchronous buffers.
+ * @param psHandle Sensor instance handle.
+ * @param au8RawFrame Raw frame bytes (ACCEL..GYRO).
+ * @return DRIVER_OK on success, otherwise te_Driver_RetCode.
+ */
+te_Driver_RetCode Mpu6050_SubmitRawFrame(ts_Mpu6050_Handle *psHandle,
+                                         const uint8_t au8RawFrame[MPU6050_RAW_FRAME_BYTE_LEN]);
 
 /**
  * @brief Reserved write entry for API completeness.

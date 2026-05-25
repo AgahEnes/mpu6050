@@ -13,6 +13,10 @@ typedef struct
 {
     I2C_HandleTypeDef *pxI2cHandle;
     osMutexId_t xBusMutex;
+    osThreadId_t xWorkerTaskHandle;
+    osSemaphoreId_t xDmaSemId;
+    void *vpDriverHandle;
+    uint8_t au8DmaBuffer[MPU6050_RAW_FRAME_BYTE_LEN];
 } ts_Mpu6050_Stm32BusContext;
 
 /**
@@ -103,6 +107,27 @@ te_Driver_RetCode Mpu6050_Stm32Hal_FillLockInterface(ts_LockInterface *psLockInt
  * @return Driver return code.
  */
 te_Driver_RetCode Mpu6050_Stm32Hal_FillTimingInterface(ts_Mpu6050_TimingInterface *psTimingInterface);
+
+/**
+ * @brief Initializes internal async worker resources for DMA read flow.
+ * @param psBusContext Bus context with I2C/mutex and async storage.
+ * @param vpDriverHandle Pointer to `ts_Mpu6050_Handle`.
+ * @return Driver return code.
+ */
+te_Driver_RetCode Mpu6050_Stm32Hal_InitAsyncWorker(ts_Mpu6050_Stm32BusContext *psBusContext, void *vpDriverHandle);
+
+/**
+ * @brief EXTI ISR hook to wake internal DMA worker.
+ * @param psBusContext Bus context.
+ */
+void Mpu6050_Stm32Hal_OnPinInterrupt(ts_Mpu6050_Stm32BusContext *psBusContext);
+
+/**
+ * @brief I2C DMA completion hook for worker synchronization.
+ * @param hi2c HAL I2C handle reported by callback.
+ * @param psBusContext Bus context.
+ */
+void Mpu6050_Stm32Hal_OnDmaComplete(I2C_HandleTypeDef *hi2c, ts_Mpu6050_Stm32BusContext *psBusContext);
 
 #ifdef __cplusplus
 }

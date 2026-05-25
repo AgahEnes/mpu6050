@@ -40,45 +40,46 @@ static te_Driver_RetCode Mpu6050_prvReadBlock(ts_Mpu6050_Handle *psHandle, uint8
 static te_Driver_RetCode Mpu6050_prvWriteBlock(ts_Mpu6050_Handle *psHandle, uint8_t u8Reg, const uint8_t *pu8Data, uint16_t u16Len);
 
 /* Layer 2: Register access */
-static te_Driver_RetCode Mpu6050_prvReadRegister(ts_Mpu6050_Handle *psHandle, uint8_t u8Reg, uint8_t *pu8Data);
+static te_Driver_RetCode Mpu6050_prvReadRegister(const ts_Mpu6050_Handle *psHandle, uint8_t u8Reg, uint8_t *pu8Data);
 static te_Driver_RetCode Mpu6050_prvWriteRegister(ts_Mpu6050_Handle *psHandle, uint8_t u8Reg, uint8_t u8Data);
 
 /* Layer 3: Device semantics (ordered by related register map) */
 static te_Driver_RetCode Mpu6050_prvReadSelfTestTrim(ts_Mpu6050_Handle *psHandle, uint8_t au8SelfTest[MPU6050_SELF_TEST_TRIM_LEN]); /* SELF_TEST_X..A (0x0D..0x10) */
 static te_Driver_RetCode Mpu6050_prvRunSelfTest(ts_Mpu6050_Handle *psHandle, ts_Mpu6050_SelfTestResult *psResult);                  /* SELF_TEST_X..A (0x0D..0x10) */
 static te_Driver_RetCode Mpu6050_prvSetSampleRateDiv(ts_Mpu6050_Handle *psHandle, te_Mpu6050_SmplrtDiv eSmplrtDiv);                 /* SMPLRT_DIV (0x19) */
-static te_Driver_RetCode Mpu6050_prvGetSampleRateDiv(ts_Mpu6050_Handle *psHandle, te_Mpu6050_SmplrtDiv *peSmplrtDiv);               /* SMPLRT_DIV (0x19) */
+static te_Driver_RetCode Mpu6050_prvGetSampleRateDiv(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_SmplrtDiv *peSmplrtDiv);               /* SMPLRT_DIV (0x19) */
 static te_Driver_RetCode Mpu6050_prvSetDlpfCfg(ts_Mpu6050_Handle *psHandle, te_Mpu6050_DlpfCfg eDlpfCfg);                           /* CONFIG (0x1A) */
-static te_Driver_RetCode Mpu6050_prvGetDlpfCfg(ts_Mpu6050_Handle *psHandle, te_Mpu6050_DlpfCfg *peDlpfCfg);                         /* CONFIG (0x1A) */
+static te_Driver_RetCode Mpu6050_prvGetDlpfCfg(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_DlpfCfg *peDlpfCfg);                         /* CONFIG (0x1A) */
 static te_Driver_RetCode Mpu6050_prvSetGyroFs(ts_Mpu6050_Handle *psHandle, te_Mpu6050_GyroFs eFs);                                  /* GYRO_CONFIG (0x1B) */
-static te_Driver_RetCode Mpu6050_prvGetGyroFs(ts_Mpu6050_Handle *psHandle, te_Mpu6050_GyroFs *peFs);                                /* GYRO_CONFIG (0x1B) */
+static te_Driver_RetCode Mpu6050_prvGetGyroFs(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_GyroFs *peFs);                                /* GYRO_CONFIG (0x1B) */
 static te_Driver_RetCode Mpu6050_prvSetAccelFs(ts_Mpu6050_Handle *psHandle, te_Mpu6050_AccelFs eFs);                                /* ACCEL_CONFIG (0x1C) */
-static te_Driver_RetCode Mpu6050_prvGetAccelFs(ts_Mpu6050_Handle *psHandle, te_Mpu6050_AccelFs *peFs);                              /* ACCEL_CONFIG (0x1C) */
+static te_Driver_RetCode Mpu6050_prvGetAccelFs(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_AccelFs *peFs);                              /* ACCEL_CONFIG (0x1C) */
 static te_Driver_RetCode Mpu6050_prvSetMotThr(ts_Mpu6050_Handle *psHandle, uint8_t u8MotThr);                                       /* MOT_THR (0x1F) */
-static te_Driver_RetCode Mpu6050_prvGetMotThr(ts_Mpu6050_Handle *psHandle, uint8_t *pu8MotThr);                                     /* MOT_THR (0x1F) */
+static te_Driver_RetCode Mpu6050_prvGetMotThr(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8MotThr);                                     /* MOT_THR (0x1F) */
 static te_Driver_RetCode Mpu6050_prvSetFifoEnable(ts_Mpu6050_Handle *psHandle, uint8_t u8FifoEnable);                               /* FIFO_EN (0x23) */
-static te_Driver_RetCode Mpu6050_prvGetFifoEnable(ts_Mpu6050_Handle *psHandle, uint8_t *pu8FifoEnable);                             /* FIFO_EN (0x23) */
+static te_Driver_RetCode Mpu6050_prvGetFifoEnable(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8FifoEnable);                             /* FIFO_EN (0x23) */
 static te_Driver_RetCode Mpu6050_prvSetIntPinCfg(ts_Mpu6050_Handle *psHandle, uint8_t u8IntPinCfg);                                 /* INT_PIN_CFG (0x37) */
-static te_Driver_RetCode Mpu6050_prvGetIntPinCfg(ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntPinCfg);                               /* INT_PIN_CFG (0x37) */
+static te_Driver_RetCode Mpu6050_prvGetIntPinCfg(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntPinCfg);                               /* INT_PIN_CFG (0x37) */
 static te_Driver_RetCode Mpu6050_prvSetIntEnable(ts_Mpu6050_Handle *psHandle, uint8_t u8IntEnable);                                 /* INT_ENABLE (0x38) */
-static te_Driver_RetCode Mpu6050_prvGetIntEnable(ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntEnable);                               /* INT_ENABLE (0x38) */
-static te_Driver_RetCode Mpu6050_prvGetIntStatus(ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntStatus);                               /* INT_STATUS (0x3A) */
+static te_Driver_RetCode Mpu6050_prvGetIntEnable(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntEnable);                               /* INT_ENABLE (0x38) */
+static te_Driver_RetCode Mpu6050_prvGetIntStatus(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntStatus);                               /* INT_STATUS (0x3A) */
 static te_Driver_RetCode Mpu6050_prvReadRawFrame(ts_Mpu6050_Handle *psHandle, int16_t as16Raw[7]);                                  /* ACCEL_XOUT_H..GYRO_ZOUT_L (0x3B..0x48) */
 static te_Driver_RetCode Mpu6050_prvSignalPathReset(ts_Mpu6050_Handle *psHandle, const uint8_t *pu8ResetValue);                     /* SIGNAL_PATH_RESET (0x68) */
 static te_Driver_RetCode Mpu6050_prvSetMotDetectCtrl(ts_Mpu6050_Handle *psHandle, uint8_t u8MotDetectCtrl);                         /* MOT_DETECT_CTRL (0x69) */
-static te_Driver_RetCode Mpu6050_prvGetMotDetectCtrl(ts_Mpu6050_Handle *psHandle, uint8_t *pu8MotDetectCtrl);                       /* MOT_DETECT_CTRL (0x69) */
+static te_Driver_RetCode Mpu6050_prvGetMotDetectCtrl(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8MotDetectCtrl);                       /* MOT_DETECT_CTRL (0x69) */
 static te_Driver_RetCode Mpu6050_prvResetFifo(ts_Mpu6050_Handle *psHandle);                                                         /* USER_CTRL (0x6A) */
 static te_Driver_RetCode Mpu6050_prvSoftReset(ts_Mpu6050_Handle *psHandle);                                                         /* PWR_MGMT_1 (0x6B) */
 static te_Driver_RetCode Mpu6050_prvSetClockSource(ts_Mpu6050_Handle *psHandle, te_Mpu6050_ClockSource eClockSource);               /* PWR_MGMT_1 (0x6B) */
-static te_Driver_RetCode Mpu6050_prvGetClockSource(ts_Mpu6050_Handle *psHandle, te_Mpu6050_ClockSource *peClockSource);             /* PWR_MGMT_1 (0x6B) */
+static te_Driver_RetCode Mpu6050_prvGetClockSource(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_ClockSource *peClockSource);             /* PWR_MGMT_1 (0x6B) */
 static te_Driver_RetCode Mpu6050_prvSetSleepState(ts_Mpu6050_Handle *psHandle, bool bSleep);                                        /* PWR_MGMT_1 (0x6B) */
 static te_Driver_RetCode Mpu6050_prvSetLpWakeCtrl(ts_Mpu6050_Handle *psHandle, uint8_t u8LpWakeCtrl);                               /* PWR_MGMT_2 (0x6C) */
-static te_Driver_RetCode Mpu6050_prvGetLpWakeCtrl(ts_Mpu6050_Handle *psHandle, uint8_t *pu8LpWakeCtrl);                             /* PWR_MGMT_2 (0x6C) */
+static te_Driver_RetCode Mpu6050_prvGetLpWakeCtrl(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8LpWakeCtrl);                             /* PWR_MGMT_2 (0x6C) */
 static te_Driver_RetCode Mpu6050_prvSetStandbyMask(ts_Mpu6050_Handle *psHandle, uint8_t u8StandbyMask);                             /* PWR_MGMT_2 (0x6C) */
-static te_Driver_RetCode Mpu6050_prvGetStandbyMask(ts_Mpu6050_Handle *psHandle, uint8_t *pu8StandbyMask);                           /* PWR_MGMT_2 (0x6C) */
-static te_Driver_RetCode Mpu6050_prvGetFifoCount(ts_Mpu6050_Handle *psHandle, uint16_t *pu16FifoCount);                             /* FIFO_COUNTH/L (0x72/0x73) */
+static te_Driver_RetCode Mpu6050_prvGetStandbyMask(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8StandbyMask);                           /* PWR_MGMT_2 (0x6C) */
+static te_Driver_RetCode Mpu6050_prvGetFifoCount(const ts_Mpu6050_Handle *psHandle, uint16_t *pu16FifoCount);                             /* FIFO_COUNTH/L (0x72/0x73) */
 static te_Driver_RetCode Mpu6050_prvReadFifo(ts_Mpu6050_Handle *psHandle, uint8_t *pu8Buffer, uint16_t u16Length);                  /* FIFO_R_W (0x74) */
 static te_Driver_RetCode Mpu6050_prvCheckWhoAmI(ts_Mpu6050_Handle *psHandle, uint8_t *pu8WhoAmI);                                   /* WHO_AM_I (0x75) */
+static te_Driver_RetCode Mpu6050_prvConvertRawToData(const ts_Mpu6050_Handle *psHandle, const int16_t as16Raw[7], ts_Mpu6050_Data *psOutData);
 
 
 /* Fonksiyon govdeleri*/
@@ -294,9 +295,9 @@ static te_Driver_RetCode Mpu6050_prvWriteBlock(ts_Mpu6050_Handle *psHandle, uint
     return (eRet == DRIVER_OK) ? DRIVER_OK : Mpu6050_prvMarkError(psHandle, eRet);
 }
 
-static te_Driver_RetCode Mpu6050_prvReadRegister(ts_Mpu6050_Handle *psHandle, uint8_t u8Reg, uint8_t *pu8Data)
+static te_Driver_RetCode Mpu6050_prvReadRegister(const ts_Mpu6050_Handle *psHandle, uint8_t u8Reg, uint8_t *pu8Data)
 {
-    return Mpu6050_prvReadBlock(psHandle, u8Reg, pu8Data, 1U);
+    return Mpu6050_prvReadBlock((ts_Mpu6050_Handle *)psHandle, u8Reg, pu8Data, 1U);
 }
 
 static te_Driver_RetCode Mpu6050_prvWriteRegister(ts_Mpu6050_Handle *psHandle, uint8_t u8Reg, uint8_t u8Data)
@@ -469,7 +470,7 @@ static te_Driver_RetCode Mpu6050_prvSetSampleRateDiv(ts_Mpu6050_Handle *psHandle
     return Mpu6050_prvWriteRegister(psHandle, MPU6050_REG_SMPLRT_DIV, (uint8_t)eSmplrtDiv);
 }
 
-static te_Driver_RetCode Mpu6050_prvGetSampleRateDiv(ts_Mpu6050_Handle *psHandle, te_Mpu6050_SmplrtDiv *peSmplrtDiv)
+static te_Driver_RetCode Mpu6050_prvGetSampleRateDiv(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_SmplrtDiv *peSmplrtDiv)
 {
     uint8_t u8SmplrtDiv;
     te_Driver_RetCode eRet;
@@ -512,7 +513,7 @@ static te_Driver_RetCode Mpu6050_prvSetDlpfCfg(ts_Mpu6050_Handle *psHandle, te_M
     return eRet;
 }
 
-static te_Driver_RetCode Mpu6050_prvGetDlpfCfg(ts_Mpu6050_Handle *psHandle, te_Mpu6050_DlpfCfg *peDlpfCfg)
+static te_Driver_RetCode Mpu6050_prvGetDlpfCfg(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_DlpfCfg *peDlpfCfg)
 {
     tu_Mpu6050_RegConfig xConfig;
     te_Driver_RetCode eRet;
@@ -546,7 +547,7 @@ static te_Driver_RetCode Mpu6050_prvSetGyroFs(ts_Mpu6050_Handle *psHandle, te_Mp
     return eRet;
 }
 
-static te_Driver_RetCode Mpu6050_prvGetGyroFs(ts_Mpu6050_Handle *psHandle, te_Mpu6050_GyroFs *peFs)
+static te_Driver_RetCode Mpu6050_prvGetGyroFs(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_GyroFs *peFs)
 {
     tu_Mpu6050_RegGyroConfig xGyroConfig;
     te_Driver_RetCode eRet;
@@ -573,7 +574,7 @@ static te_Driver_RetCode Mpu6050_prvSetAccelFs(ts_Mpu6050_Handle *psHandle, te_M
     return eRet;
 }
 
-static te_Driver_RetCode Mpu6050_prvGetAccelFs(ts_Mpu6050_Handle *psHandle, te_Mpu6050_AccelFs *peFs)
+static te_Driver_RetCode Mpu6050_prvGetAccelFs(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_AccelFs *peFs)
 {
     tu_Mpu6050_RegAccelConfig xAccelConfig;
     te_Driver_RetCode eRet;
@@ -596,7 +597,7 @@ static te_Driver_RetCode Mpu6050_prvSetMotThr(ts_Mpu6050_Handle *psHandle, uint8
     return Mpu6050_prvWriteRegister(psHandle, MPU6050_REG_MOT_THR, u8MotThr);
 }
 
-static te_Driver_RetCode Mpu6050_prvGetMotThr(ts_Mpu6050_Handle *psHandle, uint8_t *pu8MotThr)
+static te_Driver_RetCode Mpu6050_prvGetMotThr(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8MotThr)
 {
     if ((psHandle == NULL) || (pu8MotThr == NULL))
     {
@@ -614,7 +615,7 @@ static te_Driver_RetCode Mpu6050_prvSetFifoEnable(ts_Mpu6050_Handle *psHandle, u
     return Mpu6050_prvWriteRegister(psHandle, MPU6050_REG_FIFO_EN, xFifoEnable.u8Value);
 }
 
-static te_Driver_RetCode Mpu6050_prvGetFifoEnable(ts_Mpu6050_Handle *psHandle, uint8_t *pu8FifoEnable)
+static te_Driver_RetCode Mpu6050_prvGetFifoEnable(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8FifoEnable)
 {
     tu_Mpu6050_RegFifoEn xFifoEnable;
     te_Driver_RetCode eRet;
@@ -635,7 +636,7 @@ static te_Driver_RetCode Mpu6050_prvSetIntPinCfg(ts_Mpu6050_Handle *psHandle, ui
     return Mpu6050_prvWriteRegister(psHandle, MPU6050_REG_INT_PIN_CFG, xIntPinCfg.u8Value);
 }
 
-static te_Driver_RetCode Mpu6050_prvGetIntPinCfg(ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntPinCfg)
+static te_Driver_RetCode Mpu6050_prvGetIntPinCfg(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntPinCfg)
 {
     tu_Mpu6050_RegIntPinCfg xIntPinCfg;
     te_Driver_RetCode eRet;
@@ -656,7 +657,7 @@ static te_Driver_RetCode Mpu6050_prvSetIntEnable(ts_Mpu6050_Handle *psHandle, ui
     return Mpu6050_prvWriteRegister(psHandle, MPU6050_REG_INT_ENABLE, xIntEnable.u8Value);
 }
 
-static te_Driver_RetCode Mpu6050_prvGetIntEnable(ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntEnable)
+static te_Driver_RetCode Mpu6050_prvGetIntEnable(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntEnable)
 {
     tu_Mpu6050_RegIntEnable xIntEnable;
     te_Driver_RetCode eRet;
@@ -669,7 +670,7 @@ static te_Driver_RetCode Mpu6050_prvGetIntEnable(ts_Mpu6050_Handle *psHandle, ui
     return eRet;
 }
 
-static te_Driver_RetCode Mpu6050_prvGetIntStatus(ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntStatus)
+static te_Driver_RetCode Mpu6050_prvGetIntStatus(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8IntStatus)
 {
     tu_Mpu6050_RegIntStatus xIntStatus;
     te_Driver_RetCode eRet;
@@ -684,7 +685,7 @@ static te_Driver_RetCode Mpu6050_prvGetIntStatus(ts_Mpu6050_Handle *psHandle, ui
 
 static te_Driver_RetCode Mpu6050_prvReadRawFrame(ts_Mpu6050_Handle *psHandle, int16_t as16Raw[7])
 {
-    uint8_t au8Frame[MPU6050_REG_BURST_DATA_LEN];
+    uint8_t au8Frame[MPU6050_RAW_FRAME_BYTE_LEN];
     te_Driver_RetCode eRet;
 
     if ((psHandle == NULL) || (as16Raw == NULL))
@@ -692,7 +693,7 @@ static te_Driver_RetCode Mpu6050_prvReadRawFrame(ts_Mpu6050_Handle *psHandle, in
         return DRIVER_ERR_NULL_PTR;
     }
 
-    eRet = Mpu6050_prvReadBlock(psHandle, MPU6050_REG_ACCEL_XOUT_H, au8Frame, MPU6050_REG_BURST_DATA_LEN);
+    eRet = Mpu6050_prvReadBlock(psHandle, MPU6050_REG_ACCEL_XOUT_H, au8Frame, MPU6050_RAW_FRAME_BYTE_LEN);
     if (eRet != DRIVER_OK)
     {
         return eRet;
@@ -741,7 +742,7 @@ static te_Driver_RetCode Mpu6050_prvSetMotDetectCtrl(ts_Mpu6050_Handle *psHandle
     return Mpu6050_prvWriteRegister(psHandle, MPU6050_REG_MOT_DETECT_CTRL, xMotDetectCtrl.u8Value);
 }
 
-static te_Driver_RetCode Mpu6050_prvGetMotDetectCtrl(ts_Mpu6050_Handle *psHandle, uint8_t *pu8MotDetectCtrl)
+static te_Driver_RetCode Mpu6050_prvGetMotDetectCtrl(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8MotDetectCtrl)
 {
     if ((psHandle == NULL) || (pu8MotDetectCtrl == NULL))
     {
@@ -804,7 +805,7 @@ static te_Driver_RetCode Mpu6050_prvSetClockSource(ts_Mpu6050_Handle *psHandle, 
     return eRet;
 }
 
-static te_Driver_RetCode Mpu6050_prvGetClockSource(ts_Mpu6050_Handle *psHandle, te_Mpu6050_ClockSource *peClockSource)
+static te_Driver_RetCode Mpu6050_prvGetClockSource(const ts_Mpu6050_Handle *psHandle, te_Mpu6050_ClockSource *peClockSource)
 {
     tu_Mpu6050_RegPwrMgmt1 xPwrMgmt1;
     te_Driver_RetCode eRet;
@@ -850,7 +851,7 @@ static te_Driver_RetCode Mpu6050_prvSetLpWakeCtrl(ts_Mpu6050_Handle *psHandle, u
     return eRet;
 }
 
-static te_Driver_RetCode Mpu6050_prvGetLpWakeCtrl(ts_Mpu6050_Handle *psHandle, uint8_t *pu8LpWakeCtrl)
+static te_Driver_RetCode Mpu6050_prvGetLpWakeCtrl(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8LpWakeCtrl)
 {
     tu_Mpu6050_RegPwrMgmt2 xPwrMgmt2;
     te_Driver_RetCode eRet;
@@ -889,7 +890,7 @@ static te_Driver_RetCode Mpu6050_prvSetStandbyMask(ts_Mpu6050_Handle *psHandle, 
     return eRet;
 }
 
-static te_Driver_RetCode Mpu6050_prvGetStandbyMask(ts_Mpu6050_Handle *psHandle, uint8_t *pu8StandbyMask)
+static te_Driver_RetCode Mpu6050_prvGetStandbyMask(const ts_Mpu6050_Handle *psHandle, uint8_t *pu8StandbyMask)
 {
     tu_Mpu6050_RegPwrMgmt2 xPwrMgmt2;
     tu_Mpu6050_RegPwrMgmt2 xStandbyMask;
@@ -910,7 +911,7 @@ static te_Driver_RetCode Mpu6050_prvGetStandbyMask(ts_Mpu6050_Handle *psHandle, 
     return eRet;
 }
 
-static te_Driver_RetCode Mpu6050_prvGetFifoCount(ts_Mpu6050_Handle *psHandle, uint16_t *pu16FifoCount)
+static te_Driver_RetCode Mpu6050_prvGetFifoCount(const ts_Mpu6050_Handle *psHandle, uint16_t *pu16FifoCount)
 {
     uint8_t au8FifoCount[2];
     te_Driver_RetCode eRet;
@@ -969,6 +970,27 @@ static te_Driver_RetCode Mpu6050_prvCheckWhoAmI(ts_Mpu6050_Handle *psHandle, uin
     return DRIVER_OK;
 }
 
+static te_Driver_RetCode Mpu6050_prvConvertRawToData(const ts_Mpu6050_Handle *psHandle, const int16_t as16Raw[7], ts_Mpu6050_Data *psOutData)
+{
+    if ((psHandle == NULL) || (as16Raw == NULL) || (psOutData == NULL))
+    {
+        return DRIVER_ERR_NULL_PTR;
+    }
+
+    psOutData->sAccelMps2.f32X = ((float)as16Raw[AXIS_X] * psHandle->f32AccelScale) - psHandle->sCalibration.sAccelBiasMps2.f32X;
+    psOutData->sAccelMps2.f32Y = ((float)as16Raw[AXIS_Y] * psHandle->f32AccelScale) - psHandle->sCalibration.sAccelBiasMps2.f32Y;
+    psOutData->sAccelMps2.f32Z = ((float)as16Raw[AXIS_Z] * psHandle->f32AccelScale) - psHandle->sCalibration.sAccelBiasMps2.f32Z;
+    psOutData->f32TempC = ((float)as16Raw[MPU6050_RAW_FRAME_IDX_TEMP] / MPU6050_TEMP_SENS_LSB_PER_C) +
+                          MPU6050_TEMP_OFFSET_C -
+                          psHandle->sCalibration.f32TempBiasC;
+    psOutData->sGyroRadS.f32X = ((float)as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_X] * psHandle->f32GyroScale) - psHandle->sCalibration.sGyroBiasRadS.f32X;
+    psOutData->sGyroRadS.f32Y = ((float)as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_Y] * psHandle->f32GyroScale) - psHandle->sCalibration.sGyroBiasRadS.f32Y;
+    psOutData->sGyroRadS.f32Z = ((float)as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_Z] * psHandle->f32GyroScale) - psHandle->sCalibration.sGyroBiasRadS.f32Z;
+    psOutData->u32TimestampMs = (psHandle->sTimingInterface.pfnGetTickMs != NULL) ? psHandle->sTimingInterface.pfnGetTickMs(psHandle->sTimingInterface.vpCtx) : 0U;
+    psOutData->bValid = true;
+    return DRIVER_OK;
+}
+
 
 /* Layer 4: Public API */
 te_Driver_RetCode Mpu6050_Open(ts_Mpu6050_Handle *psHandle, const ts_Mpu6050_OpenConfig *psConfig)
@@ -981,6 +1003,8 @@ te_Driver_RetCode Mpu6050_Open(ts_Mpu6050_Handle *psHandle, const ts_Mpu6050_Ope
     uint8_t u8MotDetectReadback;
     uint8_t u8LpWakeReadback;
     uint8_t u8WhoAmI = 0U;
+    te_Mpu6050_GyroFs eGyroFs;
+    te_Mpu6050_AccelFs eAccelFs;
     te_Driver_RetCode eRet;
 
     if ((psHandle == NULL) || (psConfig == NULL))
@@ -1140,6 +1164,23 @@ te_Driver_RetCode Mpu6050_Open(ts_Mpu6050_Handle *psHandle, const ts_Mpu6050_Ope
         return eRet;
     }
 
+    eRet = Mpu6050_prvGetGyroFs(psHandle, &eGyroFs);
+    if (eRet != DRIVER_OK)
+    {
+        return eRet;
+    }
+    eRet = Mpu6050_prvGetAccelFs(psHandle, &eAccelFs);
+    if (eRet != DRIVER_OK)
+    {
+        return eRet;
+    }
+
+    psHandle->f32AccelScale = MPU6050_STD_GRAVITY_MPS2 / Mpu6050_prvGetAccelLsbPerG(eAccelFs);
+    psHandle->f32GyroScale = MPU6050_DEG_TO_RAD / Mpu6050_prvGetGyroLsbPerDps(eGyroFs);
+    psHandle->eReadMode = MPU6050_READ_MODE_POLLING;
+    Mpu6050_prvMemZero(psHandle->sAsyncBuffers, (uint32_t)sizeof(psHandle->sAsyncBuffers));
+    atomic_init(&psHandle->u8ActiveBufferIdx, 0U);
+
     psHandle->eState = MPU6050_STATE_READY;
     return DRIVER_OK;
 }
@@ -1169,11 +1210,8 @@ te_Driver_RetCode Mpu6050_Close(ts_Mpu6050_Handle *psHandle)
 
 te_Driver_RetCode Mpu6050_Read(ts_Mpu6050_Handle *psHandle, ts_Mpu6050_Data *psOutData)
 {
-    tu_Mpu6050_RegGyroConfig xGyroCfg;
-    tu_Mpu6050_RegAccelConfig xAccelCfg;
     int16_t as16Raw[7];
-    float f32AccelScale;
-    float f32GyroScale;
+    uint8_t u8ActiveIdx;
     te_Driver_RetCode eRet;
 
     if ((psHandle == NULL) || (psOutData == NULL))
@@ -1185,34 +1223,58 @@ te_Driver_RetCode Mpu6050_Read(ts_Mpu6050_Handle *psHandle, ts_Mpu6050_Data *psO
         return DRIVER_ERR_STATE;
     }
 
+    if (psHandle->eReadMode == MPU6050_READ_MODE_ASYNC_DMA)
+    {
+        u8ActiveIdx = atomic_load_explicit(&psHandle->u8ActiveBufferIdx, memory_order_acquire);
+        if (u8ActiveIdx >= 2U)
+        {
+            return DRIVER_ERR_STATE;
+        }
+
+        *psOutData = psHandle->sAsyncBuffers[u8ActiveIdx];
+        return DRIVER_OK;
+    }
+
     eRet = Mpu6050_prvReadRawFrame(psHandle, as16Raw);
     if (eRet != DRIVER_OK)
     {
         return eRet;
     }
-    eRet = Mpu6050_prvReadRegister(psHandle, MPU6050_REG_GYRO_CONFIG, &xGyroCfg.u8Value);
-    if (eRet != DRIVER_OK)
+    return Mpu6050_prvConvertRawToData(psHandle, as16Raw, psOutData);
+}
+
+te_Driver_RetCode Mpu6050_SubmitRawFrame(ts_Mpu6050_Handle *psHandle,
+                                         const uint8_t au8RawFrame[MPU6050_RAW_FRAME_BYTE_LEN])
+{
+    int16_t as16Raw[7];
+    uint8_t u8NextIdx;
+    te_Driver_RetCode eRet;
+
+    if ((psHandle == NULL) || (au8RawFrame == NULL))
     {
-        return eRet;
+        return DRIVER_ERR_NULL_PTR;
     }
-    eRet = Mpu6050_prvReadRegister(psHandle, MPU6050_REG_ACCEL_CONFIG, &xAccelCfg.u8Value);
+    if ((psHandle->eState != MPU6050_STATE_READY) && (psHandle->eState != MPU6050_STATE_SLEEP))
+    {
+        return DRIVER_ERR_STATE;
+    }
+
+    u8NextIdx = (uint8_t)!atomic_load_explicit(&psHandle->u8ActiveBufferIdx, memory_order_acquire);
+    as16Raw[AXIS_X] = Mpu6050_prvParseBe16(&au8RawFrame[0]);
+    as16Raw[AXIS_Y] = Mpu6050_prvParseBe16(&au8RawFrame[2]);
+    as16Raw[AXIS_Z] = Mpu6050_prvParseBe16(&au8RawFrame[4]);
+    as16Raw[MPU6050_RAW_FRAME_IDX_TEMP] = Mpu6050_prvParseBe16(&au8RawFrame[6]);
+    as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_X] = Mpu6050_prvParseBe16(&au8RawFrame[8]);
+    as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_Y] = Mpu6050_prvParseBe16(&au8RawFrame[10]);
+    as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_Z] = Mpu6050_prvParseBe16(&au8RawFrame[12]);
+
+    eRet = Mpu6050_prvConvertRawToData(psHandle, as16Raw, &psHandle->sAsyncBuffers[u8NextIdx]);
     if (eRet != DRIVER_OK)
     {
         return eRet;
     }
 
-    f32AccelScale = MPU6050_STD_GRAVITY_MPS2 / Mpu6050_prvGetAccelLsbPerG((te_Mpu6050_AccelFs)xAccelCfg.sBits.u8AfsSel);
-    f32GyroScale = MPU6050_DEG_TO_RAD / Mpu6050_prvGetGyroLsbPerDps((te_Mpu6050_GyroFs)xGyroCfg.sBits.u8FsSel);
-
-    psOutData->sAccelMps2.f32X = ((float)as16Raw[AXIS_X] * f32AccelScale) - psHandle->sCalibration.sAccelBiasMps2.f32X;
-    psOutData->sAccelMps2.f32Y = ((float)as16Raw[AXIS_Y] * f32AccelScale) - psHandle->sCalibration.sAccelBiasMps2.f32Y;
-    psOutData->sAccelMps2.f32Z = ((float)as16Raw[AXIS_Z] * f32AccelScale) - psHandle->sCalibration.sAccelBiasMps2.f32Z;
-    psOutData->f32TempC        = ((float)as16Raw[MPU6050_RAW_FRAME_IDX_TEMP] / MPU6050_TEMP_SENS_LSB_PER_C) + MPU6050_TEMP_OFFSET_C - psHandle->sCalibration.f32TempBiasC;
-    psOutData->sGyroRadS.f32X  = ((float)as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_X] * f32GyroScale) - psHandle->sCalibration.sGyroBiasRadS.f32X;
-    psOutData->sGyroRadS.f32Y  = ((float)as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_Y] * f32GyroScale) - psHandle->sCalibration.sGyroBiasRadS.f32Y;
-    psOutData->sGyroRadS.f32Z  = ((float)as16Raw[MPU6050_RAW_FRAME_IDX_GYRO_BASE + AXIS_Z] * f32GyroScale) - psHandle->sCalibration.sGyroBiasRadS.f32Z;
-    psOutData->u32TimestampMs  = (psHandle->sTimingInterface.pfnGetTickMs != NULL) ? psHandle->sTimingInterface.pfnGetTickMs(psHandle->sTimingInterface.vpCtx) : 0U;
-    psOutData->bValid          = true;
+    atomic_store_explicit(&psHandle->u8ActiveBufferIdx, u8NextIdx, memory_order_release);
     return DRIVER_OK;
 }
 
@@ -1471,6 +1533,17 @@ te_Driver_RetCode Mpu6050_Ioctl(ts_Mpu6050_Handle *psHandle, te_Mpu6050_IoctlCmd
                                          ((ts_Mpu6050_RegisterBlockAccess *)vpArg)->u8RegisterAddr,
                                          ((ts_Mpu6050_RegisterBlockAccess *)vpArg)->pu8Buffer,
                                          ((ts_Mpu6050_RegisterBlockAccess *)vpArg)->u16Length);
+        }
+        break;
+
+    case MPU6050_IOCTL_SET_READ_MODE:
+        eRet = (vpArg == NULL) ? DRIVER_ERR_NULL_PTR :
+               (((*(te_Mpu6050_ReadMode *)vpArg != MPU6050_READ_MODE_POLLING) &&
+                 (*(te_Mpu6050_ReadMode *)vpArg != MPU6050_READ_MODE_ASYNC_DMA)) ?
+                DRIVER_ERR_INVALID_ARG : DRIVER_OK);
+        if (eRet == DRIVER_OK)
+        {
+            psHandle->eReadMode = *(te_Mpu6050_ReadMode *)vpArg;
         }
         break;
 
