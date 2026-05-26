@@ -1020,8 +1020,7 @@ te_Driver_RetCode Mpu6050_Open(ts_Mpu6050_Handle *psHandle, const ts_Mpu6050_Ope
     psHandle->eState = MPU6050_STATE_UNINIT;
     psHandle->u8I2cAddress = (psConfig->u8I2cAddress == 0U) ? MPU6050_I2C_ADDR_AD0_LOW : psConfig->u8I2cAddress;
     psHandle->u32BusTimeoutMs = (psConfig->u32BusTimeoutMs == 0U) ? MPU6050_BUS_TIMEOUT_DEFAULT_MS : psConfig->u32BusTimeoutMs;
-    psHandle->u32BusLockTimeoutMs =
-        (psConfig->u32BusLockTimeoutMs == 0U) ? MPU6050_BUS_LOCK_TIMEOUT_DEFAULT_MS : psConfig->u32BusLockTimeoutMs;
+    psHandle->u32BusLockTimeoutMs = (psConfig->u32BusLockTimeoutMs == 0U) ? MPU6050_BUS_LOCK_TIMEOUT_DEFAULT_MS : psConfig->u32BusLockTimeoutMs;
     psHandle->sBusInterface = psConfig->sBusInterface;
     psHandle->sLockInterface = psConfig->sLockInterface;
     psHandle->sTimingInterface = psConfig->sTimingInterface;

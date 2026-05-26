@@ -8,6 +8,11 @@ extern "C" {
 #include "mpu6050_driver.h"
 #include "stm32f4xx_hal.h"
 #include "cmsis_os2.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+
+#define MPU6050_DMA_WORKER_STACK_WORDS            (256U)
 
 typedef struct
 {
@@ -17,6 +22,9 @@ typedef struct
     osSemaphoreId_t xDmaSemId;
     void *vpDriverHandle;
     uint8_t au8DmaBuffer[MPU6050_RAW_FRAME_BYTE_LEN];
+    StaticSemaphore_t xDmaSemaphoreCb;
+    StaticTask_t xWorkerTaskCb;
+    StackType_t au32WorkerTaskStack[MPU6050_DMA_WORKER_STACK_WORDS];
 } ts_Mpu6050_Stm32BusContext;
 
 /**

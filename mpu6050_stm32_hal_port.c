@@ -2,7 +2,6 @@
 #include "mpu6050_hal.h"
 
 #define MPU6050_DMA_WORKER_FLAG_DATA_READY         (0x01U)
-#define MPU6050_DMA_WORKER_STACK_SIZE_BYTES        (512U)
 
 static void vMpuWorkerTask(void *vpArgument);
 
@@ -199,13 +198,6 @@ static void vMpuWorkerTask(void *vpArgument)
 
 te_Driver_RetCode Mpu6050_Stm32Hal_InitAsyncWorker(ts_Mpu6050_Stm32BusContext *psBusContext, void *vpDriverHandle)
 {
-    const osThreadAttr_t xWorkerAttr =
-    {
-        .name = "mpu_dma_wrk",
-        .priority = osPriorityRealtime,
-        .stack_size = MPU6050_DMA_WORKER_STACK_SIZE_BYTES
-    };
-
     if ((psBusContext == NULL) || (psBusContext->pxI2cHandle == NULL) || (psBusContext->xBusMutex == NULL) || (vpDriverHandle == NULL))
     {
         return DRIVER_ERR_INVALID_ARG;
@@ -215,8 +207,24 @@ te_Driver_RetCode Mpu6050_Stm32Hal_InitAsyncWorker(ts_Mpu6050_Stm32BusContext *p
         return DRIVER_ERR_STATE;
     }
 
+    const osSemaphoreAttr_t xDmaSemAttr =
+    {
+        .name = "mpu_dma_sem",
+        .cb_mem = &psBusContext->xDmaSemaphoreCb,
+        .cb_size = sizeof(psBusContext->xDmaSemaphoreCb)
+    };
+    const osThreadAttr_t xWorkerAttr =
+    {
+        .name = "mpu_dma_wrk",
+        .priority = osPriorityRealtime,
+        .stack_mem = psBusContext->au32WorkerTaskStack,
+        .stack_size = sizeof(psBusContext->au32WorkerTaskStack),
+        .cb_mem = &psBusContext->xWorkerTaskCb,
+        .cb_size = sizeof(psBusContext->xWorkerTaskCb)
+    };
+
     psBusContext->vpDriverHandle = vpDriverHandle;
-    psBusContext->xDmaSemId = osSemaphoreNew(1U, 0U, NULL);
+    psBusContext->xDmaSemId = osSemaphoreNew(1U, 0U, &xDmaSemAttr);
     if (psBusContext->xDmaSemId == NULL)
     {
         psBusContext->vpDriverHandle = NULL;
