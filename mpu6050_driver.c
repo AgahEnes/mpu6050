@@ -962,7 +962,7 @@ static te_Driver_RetCode Mpu6050_prvCheckWhoAmI(ts_Mpu6050_Handle *psHandle, uin
         return eRet;
     }
 
-    if ((*pu8WhoAmI != MPU6050_WHO_AM_I_EXPECTED_LOW) && (*pu8WhoAmI != MPU6050_WHO_AM_I_EXPECTED_HIGH))
+    if ((*pu8WhoAmI != MPU6050_WHO_AM_I_EXPECTED_LOW) && (*pu8WhoAmI != MPU6050_WHO_AM_I_EXPECTED_HIGH) && (*pu8WhoAmI != MPU6050_WHO_AM_I_CUSTOM_VALUE))
     {
         return Mpu6050_prvMarkError(psHandle, DRIVER_ERR_WHOAMI);
     }
@@ -1049,7 +1049,7 @@ te_Driver_RetCode Mpu6050_Open(ts_Mpu6050_Handle *psHandle, const ts_Mpu6050_Ope
     {
         return eRet;
     }
-    if ((xPwrMgmt1.u8Value != MPU6050_REG_PWR_MGMT_1_DEFAULT) && (xPwrMgmt1.u8Value != MPU6050_REG_DEFAULT_ZERO))
+    if ((xPwrMgmt1.u8Value != MPU6050_REG_PWR_MGMT_1_DEFAULT) && (xPwrMgmt1.u8Value != MPU6050_REG_DEFAULT_ZERO) && (xPwrMgmt1.u8Value != MPU6050_REG_PWR_MGMT_1_CUSTOM_VALUE))
     {
         return DRIVER_ERR_IO;
     }

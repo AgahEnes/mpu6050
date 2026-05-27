@@ -10,6 +10,7 @@ extern "C" {
 /* Device identification */
 #define MPU6050_WHO_AM_I_EXPECTED_LOW        (0x68U)
 #define MPU6050_WHO_AM_I_EXPECTED_HIGH       (0x69U)
+#define MPU6050_WHO_AM_I_CUSTOM_VALUE        (0x70U)
 
 /* I2C addresses (7-bit) */
 #define MPU6050_I2C_ADDR_AD0_LOW             (0x68U)
@@ -65,6 +66,7 @@ extern "C" {
 /* Reset/default values */
 #define MPU6050_REG_DEFAULT_ZERO             (0x00U)
 #define MPU6050_REG_PWR_MGMT_1_DEFAULT       (0x40U)
+#define MPU6050_REG_PWR_MGMT_1_CUSTOM_VALUE  (0x01U)
 #define MPU6050_REG_WHO_AM_I_DEFAULT         (0x68U)
 
 /* Physical conversion constants */
