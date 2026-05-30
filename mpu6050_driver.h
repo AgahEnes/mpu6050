@@ -57,7 +57,6 @@ typedef te_Driver_RetCode (*tpfn_Mpu6050DelayMs)(uint32_t u32DelayMs, void *vpCt
 typedef uint32_t (*tpfn_Mpu6050GetTickMs)(void *vpCtx);
 typedef te_Driver_RetCode (*tpfn_Mpu6050Lock)(uint32_t u32TimeoutMs, void *vpCtx);
 typedef te_Driver_RetCode (*tpfn_Mpu6050Unlock)(void *vpCtx);
-typedef te_Driver_RetCode (*tpfn_Mpu6050InterruptPinControl)(void *vpCtx, bool bEnable);
 
 typedef struct
 {
@@ -88,8 +87,6 @@ typedef struct
     ts_BusInterface sBusInterface;
     ts_LockInterface sLockInterface;
     ts_Mpu6050_TimingInterface sTimingInterface;
-    tpfn_Mpu6050InterruptPinControl pfnInterruptPinControl;
-    void *vpInterruptCtx;
 } ts_Mpu6050_OpenConfig;
 
 typedef struct
@@ -154,8 +151,6 @@ typedef struct
     ts_LockInterface sLockInterface;
     ts_Mpu6050_TimingInterface sTimingInterface;
     ts_Mpu6050_Calibration sCalibration;
-    tpfn_Mpu6050InterruptPinControl pfnInterruptPinControl;
-    void *vpInterruptCtx;
     te_Mpu6050_ReadMode eReadMode;
     float f32AccelScale;
     float f32GyroScale;
@@ -189,8 +184,6 @@ typedef enum
     MPU6050_IOCTL_SET_INT_ENABLE = 0x32U,
     MPU6050_IOCTL_GET_INT_ENABLE = 0x33U,
     MPU6050_IOCTL_GET_INT_STATUS = 0x34U,
-    MPU6050_IOCTL_ENABLE_INTERRUPT_PIN = 0x35U,
-    MPU6050_IOCTL_DISABLE_INTERRUPT_PIN = 0x36U,
     MPU6050_IOCTL_SET_FIFO_ENABLE = 0x40U,
     MPU6050_IOCTL_GET_FIFO_ENABLE = 0x41U,
     MPU6050_IOCTL_RESET_FIFO = 0x42U,

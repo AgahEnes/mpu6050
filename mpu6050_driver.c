@@ -1024,8 +1024,6 @@ te_Driver_RetCode Mpu6050_Open(ts_Mpu6050_Handle *psHandle, const ts_Mpu6050_Ope
     psHandle->sBusInterface = psConfig->sBusInterface;
     psHandle->sLockInterface = psConfig->sLockInterface;
     psHandle->sTimingInterface = psConfig->sTimingInterface;
-    psHandle->pfnInterruptPinControl = psConfig->pfnInterruptPinControl;
-    psHandle->vpInterruptCtx = psConfig->vpInterruptCtx;
 
     if (psHandle->sTimingInterface.pfnDelayMs != NULL)
     {
@@ -1429,24 +1427,6 @@ te_Driver_RetCode Mpu6050_Ioctl(ts_Mpu6050_Handle *psHandle, te_Mpu6050_IoctlCmd
 
     case MPU6050_IOCTL_GET_INT_STATUS:
         eRet = (vpArg == NULL) ? DRIVER_ERR_NULL_PTR : Mpu6050_prvGetIntStatus(psHandle, (uint8_t *)vpArg);
-        break;
-
-    case MPU6050_IOCTL_ENABLE_INTERRUPT_PIN:
-        if (psHandle->pfnInterruptPinControl == NULL)
-        {
-            eRet = DRIVER_ERR_NOT_SUPPORTED;
-            break;
-        }
-        eRet = psHandle->pfnInterruptPinControl(psHandle->vpInterruptCtx, true);
-        break;
-
-    case MPU6050_IOCTL_DISABLE_INTERRUPT_PIN:
-        if (psHandle->pfnInterruptPinControl == NULL)
-        {
-            eRet = DRIVER_ERR_NOT_SUPPORTED;
-            break;
-        }
-        eRet = psHandle->pfnInterruptPinControl(psHandle->vpInterruptCtx, false);
         break;
 
     case MPU6050_IOCTL_SET_FIFO_ENABLE:
