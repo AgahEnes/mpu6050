@@ -1064,7 +1064,7 @@ te_Driver_RetCode Mpu6050_Open(ts_Mpu6050_Handle *psHandle, const ts_Mpu6050_Ope
         return eRet;
     }
 
-    eRet = Mpu6050_prvSetSampleRateDiv(psHandle, MPU6050_SMPLRT_DIV_100HZ_DLPF_ON);
+    eRet = Mpu6050_prvSetSampleRateDiv(psHandle, MPU6050_SMPLRT_DIV_200HZ_DLPF_ON);
     if (eRet != DRIVER_OK)
     {
         return eRet;
@@ -1147,7 +1147,7 @@ te_Driver_RetCode Mpu6050_Open(ts_Mpu6050_Handle *psHandle, const ts_Mpu6050_Ope
         return eRet;
     }
 
-    if ((eSmplrtDivReadback != MPU6050_SMPLRT_DIV_100HZ_DLPF_ON) ||
+    if ((eSmplrtDivReadback != MPU6050_SMPLRT_DIV_200HZ_DLPF_ON) ||
         (u8MotThrReadback != MPU6050_MOT_THR_MIN) ||
         (u8MotDetectReadback != xMotDetectCtrl.u8Value) ||
         (u8LpWakeReadback != MPU6050_LP_WAKE_CTRL_1_25HZ))
