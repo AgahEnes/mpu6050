@@ -9,23 +9,10 @@ extern "C" {
 #include <stdint.h>
 #include <stdatomic.h>
 
+#include "driver_types.h"
 #include "mpu6050_hal.h"
 
 #define MPU6050_DRIVER_API_VERSION                (0x0202U)
-
-typedef enum
-{
-    DRIVER_OK = 0,
-    DRIVER_ERR_NULL_PTR,
-    DRIVER_ERR_INVALID_ARG,
-    DRIVER_ERR_STATE,
-    DRIVER_ERR_BUS,
-    DRIVER_ERR_TIMEOUT,
-    DRIVER_ERR_CONFIG,
-    DRIVER_ERR_NOT_SUPPORTED,
-    DRIVER_ERR_WHOAMI,
-    DRIVER_ERR_IO
-} te_Driver_RetCode;
 
 typedef enum
 {
