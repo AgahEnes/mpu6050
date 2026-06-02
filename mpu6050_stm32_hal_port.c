@@ -64,6 +64,17 @@ te_Driver_RetCode Mpu6050_Stm32Hal_Write(uint8_t u8DeviceAddr,
 te_Driver_RetCode Mpu6050_Stm32Hal_DelayMs(uint32_t u32DelayMs, void *vpBusContext)
 {
     (void)vpBusContext;
+
+    if (u32DelayMs == 0U)
+    {
+        return DRIVER_OK;
+    }
+
+    if (osKernelGetState() == osKernelRunning)
+    {
+        return (osDelay(u32DelayMs) == osOK) ? DRIVER_OK : DRIVER_ERR_IO;
+    }
+
     HAL_Delay(u32DelayMs);
     return DRIVER_OK;
 }
